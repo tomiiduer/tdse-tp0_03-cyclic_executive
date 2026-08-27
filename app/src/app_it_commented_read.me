@@ -1,0 +1,112 @@
+/*
+ * Copyright (c) 2026 Juan Manuel Cruz <jcruz@fi.uba.ar> <jcruz@frba.utn.edu.ar>.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its
+ *    contributors may be used to endorse or promote products derived from
+ *    this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author : Juan Manuel Cruz <jcruz@fi.uba.ar> <jcruz@frba.utn.edu.ar>
+ */
+
+/********************** inclusions *******************************************/
+
+/* C Preprocessors (https://www.geeksforgeeks.org/) */
+/*
+ * The #include preprocessor directive is used to include the header files in
+ * the C program.
+ */
+/* Project includes */
+#include "main.h"
+
+/* Demo includes */
+#include "logger.h"
+#include "dwt.h"
+
+/* Application & Tasks includes */
+#include "board.h"
+
+/********************** macros and definitions *******************************/
+
+/********************** internal data declaration ****************************/
+
+/********************** internal functions declaration ***********************/
+
+/********************** internal data definition *****************************/
+
+/********************** external data declaration ****************************/
+
+/* Understanding “volatile” qualifier in C | Set 1 (Introduction)
+ * Understanding “volatile” qualifier in C | Set 2 (Examples)
+ * (https://www.geeksforgeeks.org/)
+ */
+/*
+ * The volatile keyword is intended to prevent the compiler from applying any
+ * optimizations on objects that can change in ways that cannot be determined
+ * by the compiler.
+ * Objects declared as volatile are omitted from optimization because their
+ * values can be changed by code outside the scope of current code at any time.
+ * The system always reads the current value of a volatile object from the
+ * memory location rather than keeping its value in a temporary register at the
+ * point it is requested, even if a previous instruction asked for the value
+ * from the same object.
+ */
+volatile uint32_t g_app_tick_cnt;
+
+/********************** external functions definition ************************/
+
+/* Memory Layout of C Programs (https://www.geeksforgeeks.org/) */
+/* Storage Classes in C (https://www.geeksforgeeks.org/) */
+/* C Functions (https://www.geeksforgeeks.org/) */
+/*
+ * The function definition consists of actual statements which are executed
+ * when the function is called (i.e. when the program control comes to the
+ * function).
+ */
+void app_it_init(void)
+{
+	/* Protect shared resource */
+	__asm("CPSID i");	/* disable interrupts */
+	/* Init Tick Counter */
+	g_app_tick_cnt = ZERO;
+    __asm("CPSIE i");	/* enable interrupts */
+}
+
+/* Callbacks in C (https://www.geeksforgeeks.org/) */
+/*
+ * A callback is any executable code that is passed as an argument to another
+ * code, which is expected to call back (execute) the argument at a given time.
+ * In simple language, If a reference of a function is passed to another
+ * function as an argument to call it, then it will be called a Callback
+ * function.
+ */
+void HAL_SYSTICK_Callback(void)
+{
+	/* Update Tick Counter */
+	g_app_tick_cnt++;
+}
+
+/********************** end of file ******************************************/
